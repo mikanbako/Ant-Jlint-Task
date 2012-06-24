@@ -18,6 +18,7 @@ package com.github.mikanbako.ant.jlinttask;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -28,6 +29,8 @@ import org.junit.Test;
  * Test {@link JlintExecutor}.
  */
 public class JlintExecutorTest extends TestCase {
+    private static final File JLINT_EXECUTABLE = new File(".");
+
     private CommandRecordingExecutor mCommandExecutor;
 
     private StringBuilder mResultStringBuilder;
@@ -60,16 +63,15 @@ public class JlintExecutorTest extends TestCase {
      */
     @Test
     public void testMinimumArguments() throws Exception {
-        File jlintExecutable = new File(".");
         List<File> classFiles = Arrays.asList(new File("a"), new File("b"));
 
         JlintExecutor executor = createJlintExecutor(
-                jlintExecutable, classFiles);
+                JLINT_EXECUTABLE, classFiles);
         executor.execute(mResultStringBuilder);
 
         List<String> recordedCommand = mCommandExecutor.getRecordedCommand();
         assertEquals(
-                jlintExecutable.getAbsolutePath(),
+                JLINT_EXECUTABLE.getAbsolutePath(),
                 recordedCommand.get(0));
         assertEquals(
                 classFiles.get(0).getAbsolutePath(),
@@ -79,6 +81,7 @@ public class JlintExecutorTest extends TestCase {
                 recordedCommand.get(1));
     }
 
+
     /**
      * Test with source directory.
      *
@@ -87,22 +90,47 @@ public class JlintExecutorTest extends TestCase {
      */
     @Test
     public void testWithSourceDirectory() throws Exception {
-        File jlintExecutable = new File(".");
         File sourceDirectory = new File("d");
         List<File> classFiles = Collections.singletonList(new File("a"));
 
         JlintExecutor executor = createJlintExecutor(
-                jlintExecutable, classFiles);
+                JLINT_EXECUTABLE, classFiles);
         executor.setSourceDirectory(sourceDirectory);
         executor.execute(mResultStringBuilder);
 
         List<String> recordedCommand = mCommandExecutor.getRecordedCommand();
         assertEquals(
-                jlintExecutable.getAbsolutePath(), recordedCommand.get(0));
+                JLINT_EXECUTABLE.getAbsolutePath(), recordedCommand.get(0));
         assertEquals("-source", recordedCommand.get(1));
         assertEquals(
                 sourceDirectory.getAbsolutePath(), recordedCommand.get(2));
         assertEquals(
                 classFiles.get(0).getAbsolutePath(), recordedCommand.get(3));
+    }
+
+    /**
+     * Test with some options.
+     *
+     * Command is "<Jlint executable> <option> ... <class file> ...".
+     */
+    @Test
+    public void testWithOptions() throws Exception {
+        List<File> classFiles = Collections.singletonList(new File("a"));
+        HashSet<String> options = new HashSet<String>();
+        options.add("+all");
+        options.add("-data_flow");
+
+        JlintExecutor executor = createJlintExecutor(JLINT_EXECUTABLE,
+                classFiles);
+        executor.setOptions(options);
+        executor.execute(mResultStringBuilder);
+
+        List<String> recordedCommand = mCommandExecutor.getRecordedCommand();
+        assertEquals(
+                JLINT_EXECUTABLE.getAbsolutePath(), recordedCommand.get(0));
+        assertTrue(recordedCommand.subList(1, 3).contains("+all"));
+        assertTrue(recordedCommand.subList(1, 3).contains("-data_flow"));
+        assertEquals(classFiles.get(0).getAbsolutePath(),
+                recordedCommand.get(3));
     }
 }

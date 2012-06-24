@@ -50,6 +50,11 @@ public final class JlintTask extends Task {
     private File mOutputFile;
 
     /**
+     * Message filter.
+     */
+    private String mMessageFilter;
+
+    /**
      * Path of class files analyzed by Jlint.
      */
     private final ArrayList<FileSet> mClassFileSets = new ArrayList<FileSet>();
@@ -82,6 +87,15 @@ public final class JlintTask extends Task {
     }
 
     /**
+     * Set the message filter.
+     *
+     * @param messageFilter Message filter.
+     */
+    public void setMessageFilter(String messageFilter) {
+        mMessageFilter = messageFilter;
+    }
+
+    /**
      * Add {@link FileSet} that contains class files.
      *
      * @param fileSet {@link FileSet} that contains class file
@@ -102,6 +116,10 @@ public final class JlintTask extends Task {
 
         JlintExecutor executor = new JlintExecutor(
                 getJlintExecutable(), getClassFiles());
+
+        if (mMessageFilter != null) {
+            executor.setOptions(OptionParser.parse(mMessageFilter));
+        }
 
         if (mSourceDirectory != null) {
             executor.setSourceDirectory(getSourceDirectory());
