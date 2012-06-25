@@ -35,7 +35,8 @@ import java.util.List;
     private int mExitCode;
 
     @Override
-    public int execute(List<String> command, StringBuilder ignored) throws IOException,
+    public int execute(List<String> command, StringBuilder ignoredOutput,
+            StringBuilder ignoredError) throws IOException,
             InterruptedException {
         mRecordedCommand.clear();
         mRecordedCommand.addAll(command);

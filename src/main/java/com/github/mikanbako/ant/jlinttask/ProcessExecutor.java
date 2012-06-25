@@ -17,6 +17,7 @@ package com.github.mikanbako.ant.jlinttask;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.Charset;
@@ -34,7 +35,8 @@ import java.util.List;
 
 
     @Override
-    public int execute(List<String> command, StringBuilder output) throws
+    public int execute(List<String> command,
+            StringBuilder output, StringBuilder error) throws
             IOException, InterruptedException {
         // Execute command.
 
@@ -45,10 +47,25 @@ import java.util.List;
 
         // Extract output from command.
 
+        read(process.getInputStream(), output);
+        read(process.getErrorStream(), error);
+
+        return process.exitValue();
+    }
+
+    /**
+     * Read string from the {@link InputStream}.
+     *
+     * @param inputStream {@link InputStream} to read string
+     * @param destination Destination of the string
+     * @throws IOException If I/O error occurs
+     */
+    private void read(InputStream inputStream,
+            StringBuilder destination) throws IOException {
         LineNumberReader reader = new LineNumberReader(
                 new BufferedReader(
                         new InputStreamReader(
-                                process.getInputStream(),
+                                inputStream,
                                 Charset.defaultCharset())));
         try {
             while (true) {
@@ -57,13 +74,11 @@ import java.util.List;
                     break;
                 }
 
-                output.append(line);
-                output.append(LINE_SEPARATOR);
+                destination.append(line);
+                destination.append(LINE_SEPARATOR);
             }
         } finally {
             reader.close();
         }
-
-        return process.exitValue();
     }
 }

@@ -26,10 +26,13 @@ import java.util.List;
      * Execute a command.
      *
      * @param command Program and its arguments
-     * @param output {@link StringBuilder} that appended output from command.
+     * @param output {@link StringBuilder} that is appended for the standard
+     *  output from command
+     * @param error {@link StringBuilder} that is appended for the standard
+     *  error from command
      * @return Exit code of program.
      * @throws IOException If I/O error occurs
      * @throws InterruptedException If other thread is interrupted.
      */
-    int execute(List<String> command, StringBuilder output) throws IOException, InterruptedException;
+    int execute(List<String> command, StringBuilder output, StringBuilder error) throws IOException, InterruptedException;
 }
