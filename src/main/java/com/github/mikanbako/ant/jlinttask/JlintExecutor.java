@@ -18,7 +18,9 @@ package com.github.mikanbako.ant.jlinttask;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This object executes Jlint.
@@ -40,6 +42,11 @@ import java.util.List;
      * Path of directory that contains source files.
      */
     private File mSourceDirectory;
+
+    /**
+     * Set of option.
+     */
+    private final HashSet<String> mOptions = new HashSet<String>();
 
     /**
      * Object that executes command.
@@ -85,6 +92,18 @@ import java.util.List;
     }
 
     /**
+     * Set options.
+     *
+     * The option does not have its argument.
+     *
+     * @param options Set of options.
+     */
+    public void setOptions(Set<String> options) {
+        mOptions.clear();
+        mOptions.addAll(options);
+    }
+
+    /**
      * Execute Jlint.
      *
      * @param output {@link StringBuilder} that appended output
@@ -101,6 +120,10 @@ import java.util.List;
         if (mSourceDirectory != null) {
             command.add("-source");
             command.add(mSourceDirectory.getAbsolutePath());
+        }
+
+        for (String option : mOptions) {
+            command.add(option);
         }
 
         for (File classFile : mClassFiles) {

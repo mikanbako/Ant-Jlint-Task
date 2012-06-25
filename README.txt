@@ -27,11 +27,64 @@ Usage:
             the output is displayed by Ant.
         * sourceDirectory (Optional) : Path of directory contains source file.
             This attribute is the same of -source option of Jlint.
+        * messageFilter (Optional) : Configuration of message filtering.
+            This attribute is the same of message filtering options.
+            (See "Message Filtering" for detail)
+        * messageFilterFile (Optional) : Configuration file for message
+            filtering. (See "Message Filtering" for detail)
 
     And the jlint element has nested elements :
 
         * fileset (Required) : FileSet type of Ant.
           This FileSet provides class files to Jlint.
+
+Message Filtering:
+
+    You can filter warning from Jlint by two ways.
+
+        1. Use messageFilter attribute of jlint tag.
+        2. Use messageFilterFile attribute of jlint tag.
+
+    1. Use messageFilter attribute of jlint tag.
+
+        Write options of Jlint that filter messages to the messageFilter
+        attribute.
+
+        For example :
+
+            <jlint executable="/usr/local/bin/jlint" sourceDirectory="src"
+                    messageFilter="-all +data_flow">
+                <fileset dir="bin">
+                    <include name="**/*.class" />
+                </fileset>
+            </jlint>
+
+    2.  Use messageFilterFile attribute of jlint tag.
+
+        Write options of Jlint that filter messages to a file specified by
+        the messageFilterFile attribute.
+
+        The file lists the options separated by white spaces.
+
+        For example :
+
+            build.xml :
+
+                <jlint executable="/usr/local/bin/jlint" sourceDirectory="src"
+                        messageFilterFile="message_filter.txt">
+                    <fileset dir="bin">
+                        <include name="**/*.class" />
+                    </fileset>
+                </jlint>
+
+            message_filter.txt :
+
+                -all
+                +data_flow
+
+    If the messageFilter and the messageFilterFile attribute are both
+    specified, options from the messageFilterFile attributes are added to
+    options from the messageFilter attribute.
 
 Example :
 
@@ -39,11 +92,13 @@ Example :
     * Source directory is src.
     * Class files are in bin.
     * Jlint output will be saved to jlint_result.txt.
+    * Jlint message filter is written in message_filter.txt.
 
     <taskdef name="jlint"
         classname="com.github.mikanbako.ant.jlinttask.JlintTask" />
 
     <jlint executable="/usr/local/bin/jlint" sourceDirectory="src"
+            messageFilterFile="message_filter.txt"
             outputFile="jlint_result.txt">
         <fileset dir="bin">
             <include name="**/*.class" />
