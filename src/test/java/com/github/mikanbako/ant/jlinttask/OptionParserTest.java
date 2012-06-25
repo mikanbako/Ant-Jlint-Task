@@ -1,6 +1,10 @@
 package com.github.mikanbako.ant.jlinttask;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -24,6 +28,18 @@ public class OptionParserTest extends TestCase {
     }
 
     /**
+     * Assert the options are contained in the {@link Set}.
+     *
+     * @param expectedOptions Expected options
+     * @param actualOptions Actual options
+     */
+    private static void assertContainedOptions(
+            List<String> expectedOptions, Set<String> actualOptions) {
+        assertEquals(expectedOptions.size(), actualOptions.size());
+        assertTrue(actualOptions.containsAll(expectedOptions));
+    }
+
+    /**
      * Test with single option.
      *
      * Result contains the option only.
@@ -32,8 +48,7 @@ public class OptionParserTest extends TestCase {
     public void testSingleOption() {
         Set<String> result = OptionParser.parse("+all");
 
-        assertEquals(1, result.size());
-        assertTrue(result.contains("+all"));
+        assertContainedOptions(Arrays.asList("+all"), result);
     }
 
     /**
@@ -45,8 +60,7 @@ public class OptionParserTest extends TestCase {
     public void testMultipleOption() {
         Set<String> result = OptionParser.parse("-all +data_flow");
 
-        assertEquals(2, result.size());
-        assertTrue(result.containsAll(Arrays.asList("-all", "+data_flow")));
+        assertContainedOptions(Arrays.asList("-all", "+data_flow"), result);
     }
 
     /**
@@ -58,7 +72,34 @@ public class OptionParserTest extends TestCase {
     public void testOptionsWithWhitespace() {
         Set<String> result = OptionParser.parse(" +all -data_flow ");
 
-        assertEquals(2, result.size());
-        assertTrue(result.containsAll(Arrays.asList("+all", "-data_flow")));
+        assertContainedOptions(Arrays.asList("+all", "-data_flow"), result);
+    }
+
+    /**
+     * Test with {@link Reader} that reads options written in a single line.
+     *
+     * Result contains the read options.
+     */
+    @Test
+    public void testOptionsFromReaderWithSingleLine() throws IOException {
+        Set<String> result = OptionParser.parse(
+                new StringReader("+all +data_flow"));
+
+        assertContainedOptions(Arrays.asList("+all", "+data_flow"), result);
+    }
+
+    /**
+     * Test with {@link Reader} that reads options written in multiple lines.
+     *
+     * Result contains the read options.
+     */
+    @Test
+    public void testOptionsFromReaderWithMultipleLine() throws IOException {
+        Set<String> result = OptionParser.parse(
+                new StringReader("+all \n -data_flow\n\r\n+bounds\n"));
+
+        assertContainedOptions(
+                Arrays.asList("+all", "-data_flow", "+bounds"),
+                result);
     }
 }

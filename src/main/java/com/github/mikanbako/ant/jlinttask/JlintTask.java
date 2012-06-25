@@ -15,15 +15,21 @@
  */
 package com.github.mikanbako.ant.jlinttask;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -53,6 +59,11 @@ public final class JlintTask extends Task {
      * Message filter.
      */
     private String mMessageFilter;
+
+    /**
+     * File of message filter.
+     */
+    private File mMessageFilterFile;
 
     /**
      * Path of class files analyzed by Jlint.
@@ -96,6 +107,15 @@ public final class JlintTask extends Task {
     }
 
     /**
+     * Set the file of message filter.
+     *
+     * @param messageFilterFile File of message filter.
+     */
+    public void setMessageFilterFile(File messageFilterFile) {
+        mMessageFilterFile = messageFilterFile;
+    }
+
+    /**
      * Add {@link FileSet} that contains class files.
      *
      * @param fileSet {@link FileSet} that contains class file
@@ -117,9 +137,7 @@ public final class JlintTask extends Task {
         JlintExecutor executor = new JlintExecutor(
                 getJlintExecutable(), getClassFiles());
 
-        if (mMessageFilter != null) {
-            executor.setOptions(OptionParser.parse(mMessageFilter));
-        }
+        executor.setOptions(getOptions());
 
         if (mSourceDirectory != null) {
             executor.setSourceDirectory(getSourceDirectory());
@@ -160,6 +178,12 @@ public final class JlintTask extends Task {
                     " must be an executable file.");
         }
 
+        // Check messageFilterFile attribute.
+        if (mMessageFilterFile != null && !mMessageFilterFile.isFile()) {
+            throw new BuildException(mMessageFilterFile.getAbsolutePath() +
+                    " must be a file.");
+        }
+
         // Check sourceDirectory attribute.
 
         if (mSourceDirectory != null && !mSourceDirectory.isDirectory()) {
@@ -193,6 +217,57 @@ public final class JlintTask extends Task {
         } catch (IOException e) {
             throw new BuildException(e);
         }
+    }
+
+    /**
+     * Get options of Jlint.
+     *
+     * @return Set that contains Jlint options
+     * @throws BuildException If this method cannot get options
+     */
+    private Set<String> getOptions() {
+        HashSet<String> options = new HashSet<String>();
+
+        if (mMessageFilter != null) {
+            options.addAll(OptionParser.parse(mMessageFilter));
+        }
+
+        if (mMessageFilterFile != null) {
+            Reader reader = null;
+
+            try {
+                reader = createReader(mMessageFilterFile);
+                options.addAll(
+                        OptionParser.parse(reader));
+            } catch (IOException e) {
+                throw new BuildException(
+                        "messageFilterFile attribute is invalid.", e);
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        throw new BuildException("I/O error occurred.", e);
+                    }
+                }
+            }
+        }
+
+        return options;
+    }
+
+    /**
+     * Create {@link Reader} for the file.
+     *
+     * @param file File to read.
+     * @return {@link Reader} for the file.
+     * @throws IOException If this method cannot create a {@link Reader}
+     */
+    private Reader createReader(File file) throws IOException {
+        return new BufferedReader(
+                new InputStreamReader(
+                        new FileInputStream(file),
+                        Charset.forName("ASCII")));
     }
 
     /**
