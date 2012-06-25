@@ -35,12 +35,15 @@ public class JlintExecutorTest extends TestCase {
 
     private StringBuilder mResultStringBuilder;
 
+    private StringBuilder mErrorStringBuilder;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
 
         mCommandExecutor = new CommandRecordingExecutor();
         mResultStringBuilder = new StringBuilder();
+        mErrorStringBuilder = new StringBuilder();
     }
 
     /**
@@ -67,7 +70,7 @@ public class JlintExecutorTest extends TestCase {
 
         JlintExecutor executor = createJlintExecutor(
                 JLINT_EXECUTABLE, classFiles);
-        executor.execute(mResultStringBuilder);
+        executor.execute(mResultStringBuilder, mErrorStringBuilder);
 
         List<String> recordedCommand = mCommandExecutor.getRecordedCommand();
         assertEquals(
@@ -96,7 +99,7 @@ public class JlintExecutorTest extends TestCase {
         JlintExecutor executor = createJlintExecutor(
                 JLINT_EXECUTABLE, classFiles);
         executor.setSourceDirectory(sourceDirectory);
-        executor.execute(mResultStringBuilder);
+        executor.execute(mResultStringBuilder, mErrorStringBuilder);
 
         List<String> recordedCommand = mCommandExecutor.getRecordedCommand();
         assertEquals(
@@ -123,7 +126,7 @@ public class JlintExecutorTest extends TestCase {
         JlintExecutor executor = createJlintExecutor(JLINT_EXECUTABLE,
                 classFiles);
         executor.setOptions(options);
-        executor.execute(mResultStringBuilder);
+        executor.execute(mResultStringBuilder, mErrorStringBuilder);
 
         List<String> recordedCommand = mCommandExecutor.getRecordedCommand();
         assertEquals(

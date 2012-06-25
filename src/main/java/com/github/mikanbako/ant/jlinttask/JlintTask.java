@@ -144,11 +144,17 @@ public final class JlintTask extends Task {
         }
 
         int exitCode;
-        StringBuilder output = new StringBuilder();
         try {
-            exitCode = executor.execute(output);
+            StringBuilder output = new StringBuilder();
+            StringBuilder error = new StringBuilder();
 
-            outputResult(output.toString());
+            exitCode = executor.execute(output, error);
+
+            log(error.toString());
+
+            if (exitCode == 0) {
+                outputResult(output.toString());
+            }
         } catch (IOException e) {
             throw new BuildException(e);
         } catch (InterruptedException e) {

@@ -106,12 +106,15 @@ import java.util.Set;
     /**
      * Execute Jlint.
      *
-     * @param output {@link StringBuilder} that appended output
+     * @param output {@link StringBuilder} that is appended for the standard
+     *  output from Jlint
+     * @param error {@link StringBuilder} that is appended for the standard
+     *  error from Jlint
      * @return Exit code
      * @throws IOException If I/O error occurs
      * @throws InterruptedException If this thread is interrupted
      */
-    public int execute(StringBuilder output) throws IOException,
+    public int execute(StringBuilder output, StringBuilder error) throws IOException,
             InterruptedException {
         ArrayList<String> command = new ArrayList<String>();
 
@@ -130,6 +133,6 @@ import java.util.Set;
             command.add(classFile.getAbsolutePath());
         }
 
-        return mCommandExecutor.execute(command, output);
+        return mCommandExecutor.execute(command, output, error);
     }
 }
