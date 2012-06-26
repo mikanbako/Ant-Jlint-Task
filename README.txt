@@ -1,5 +1,3 @@
-Developing...
-
 An Ant task for Jlint.
 
 Required software :
@@ -8,9 +6,9 @@ Required software :
     * Java Runtime Environment 1.6 or above.
     * Ant 1.7 or above.
 
-Usage:
+Usage :
 
-1. Add jlint_task-xxx.jar to classpath.
+1. Add jlint_task-xxx.jar to classpath of Ant.
 
 2. Write taskdef tag to your build.xml by the below.
 
@@ -19,7 +17,7 @@ Usage:
 
 3. Write a jlint tag to your build.xml.
 
-    The jlint element has some attributes :
+    The jlint element has attributes :
 
         * executable (Required) : Path of executable file of Jlint.
         * outputFile (Optional) : Path of file in which
@@ -38,19 +36,21 @@ Usage:
         * fileset (Required) : FileSet type of Ant.
           This FileSet provides class files to Jlint.
 
-Message Filtering:
+Message Filtering :
 
-    You can filter warning from Jlint by two ways.
+    You can filter reporting by Jlint by two ways.
 
         1. Use messageFilter attribute of jlint tag.
         2. Use messageFilterFile attribute of jlint tag.
 
     1. Use messageFilter attribute of jlint tag.
 
+        Filtering is defined in build.xml.
+
         Write options of Jlint that filter messages to the messageFilter
         attribute.
 
-        For example :
+        Example :
 
             <jlint executable="/usr/local/bin/jlint" sourceDirectory="src"
                     messageFilter="-all +data_flow">
@@ -61,12 +61,14 @@ Message Filtering:
 
     2.  Use messageFilterFile attribute of jlint tag.
 
+        Filtering is defined in an external file.
+
         Write options of Jlint that filter messages to a file specified by
         the messageFilterFile attribute.
 
         The file lists the options separated by white spaces.
 
-        For example :
+        Example :
 
             build.xml :
 
