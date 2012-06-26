@@ -36,5 +36,7 @@ import java.util.List;
      * @throws IOException If I/O error occurs
      * @throws InterruptedException If other thread is interrupted.
      */
-    int execute(List<String> command, StringBuilder output, StringBuilder error) throws IOException, InterruptedException;
+    int execute(List<String> command,
+            StringBuilder output, StringBuilder error) throws
+            IOException, InterruptedException;
 }

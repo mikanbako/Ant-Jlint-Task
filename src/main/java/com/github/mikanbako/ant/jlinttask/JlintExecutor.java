@@ -116,8 +116,8 @@ import java.util.Set;
      * @throws IOException If I/O error occurs
      * @throws InterruptedException If this thread is interrupted
      */
-    public int execute(StringBuilder output, StringBuilder error) throws IOException,
-            InterruptedException {
+    public int execute(StringBuilder output, StringBuilder error) throws
+            IOException, InterruptedException {
         ArrayList<String> command = new ArrayList<String>();
 
         command.add(mJlintExecutable.getAbsolutePath());
