@@ -85,4 +85,9 @@
   </module>
   <module name="JavadocPackage"/>
   <module name="NewlineAtEndOfFile"/>
+  <module name="Header">
+    <property name="headerFile" value="build/config/java_header.txt"/>
+    <property name="ignoreLines" value="2"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
 </module>
