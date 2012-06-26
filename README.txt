@@ -1,4 +1,4 @@
-An Ant task for Jlint.
+Jlint Ant Task - An Ant task for Jlint
 
 Required software :
 
