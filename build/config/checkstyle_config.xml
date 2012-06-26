@@ -56,7 +56,7 @@
     <module name="UnusedImports"/>
     <module name="JavadocType"/>
     <module name="JavadocMethod">
-      <property name="allowUndeclaredRTE" value="true" />
+      <property name="allowUndeclaredRTE" value="true"/>
     </module>
     <module name="JavadocVariable"/>
     <module name="JavadocStyle"/>
@@ -73,9 +73,9 @@
     <module name="StaticVariableName">
       <property name="format" value="^s[A-Z][a-zA-Z0-9]*$"/>
     </module>
-    <module name="LineLength" />
+    <module name="LineLength"/>
     <module name="GenericWhitespace"/>
-    <module name="CommentedPackageVisibilityCheck" />
+    <module name="CommentedPackageVisibilityCheck"/>
   </module>
   <module name="JavadocPackage"/>
   <module name="NewlineAtEndOfFile"/>
