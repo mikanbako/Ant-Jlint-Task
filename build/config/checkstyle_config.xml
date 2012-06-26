@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
-<!--
-    This configuration file was written by the eclipse-cs plugin configuration editor
--->
-<!--
-    Checkstyle-Configuration: jlint-task config
-    Description: none
--->
 <module name="Checker">
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
@@ -63,7 +56,7 @@
     <module name="UnusedImports"/>
     <module name="JavadocType"/>
     <module name="JavadocMethod">
-      <property name="allowUndeclaredRTE" value="true" />
+      <property name="allowUndeclaredRTE" value="true"/>
     </module>
     <module name="JavadocVariable"/>
     <module name="JavadocStyle"/>
@@ -80,9 +73,16 @@
     <module name="StaticVariableName">
       <property name="format" value="^s[A-Z][a-zA-Z0-9]*$"/>
     </module>
+    <module name="LineLength"/>
     <module name="GenericWhitespace"/>
-    <module name="CommentedPackageVisibilityCheck" />
+    <module name="CommentedPackageVisibilityCheck"/>
   </module>
   <module name="JavadocPackage"/>
   <module name="NewlineAtEndOfFile"/>
+  <module name="Header">
+    <property name="headerFile" value="build/config/java_header.txt"/>
+    <property name="ignoreLines" value="2"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  <module name="FileTabCharacter"/>
 </module>
